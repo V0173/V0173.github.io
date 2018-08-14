@@ -10,9 +10,13 @@
 <body>
 
 <table>
+
 <tr>
 <td>
 <canvas id="cnvs"></canvas><br>
+Change scale:
+<input class="scale" type="button" onclick="scale('+')" value="+"></input>
+<input class="scale" type="button" onclick="scale('-')" value="-"></input>
 </td>
 <td>
 <p>Action:&nbsp;<tt id="action"></tt></p>
@@ -21,6 +25,32 @@
 <p id="info"></p>
 </td>
 </tr>
+
+<tr>
+
+<table>
+<tr>
+<td rowspan="3">
+<input class="control" type="button" onclick="control('left')" value="&larr;"></input></td>
+<td>
+<input class="control" type="button" onclick="control('up')" value="&uarr;"></input></td>
+<td rowspan="3">
+<input class="control" type="button" onclick="control('right')" value="&rarr;"></input></td>
+</tr>
+
+<tr>
+<td>
+<input class="control" type="button" onclick="showHelp()" value="?"></input></td>
+</tr>
+
+<tr>
+<td>
+<input class="control" type="button" onclick="control('down')" value="&darr;"></input></td>
+</tr>
+</table>
+
+</tr>
+
 </table>
 
 </body>

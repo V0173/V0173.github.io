@@ -6,7 +6,7 @@ var fontSize=sellSize/2+sellSize/8;
 
 var player = {
     name: "digger",
-    health: 100,
+    health: 40,
     wealth: 0,
     damage: 5,
     shield: 0,
@@ -48,6 +48,9 @@ function initCanvas(w,h) {
     cnvs.width=w;
     cnvs.height=h;
     ctx.fillRect(0,0,cnvs.width,cnvs.height);
+
+    fontSize=sellSize/2+sellSize/8;
+    fontSize+='pt';
 }
 
 cnvs.onmousemove=function(event) {
@@ -308,6 +311,43 @@ function printInfo() {
 function print(id,str) {
     var target=document.getElementById(id);
     target.innerHTML=str;
+}
+
+function scale(m) {
+    if (m=="+" && sellSize<64) {
+        sellSize*=2;
+    }
+    if (m=="-" && sellSize>16) {
+        sellSize/=2;
+    }
+    initCanvas(map.w*sellSize,map.h*sellSize);
+    drawMap();
+}
+
+function control(key) {
+    switch (key) {
+        case 'left': //moveLeft
+            print("action","Moving Left");
+            checkMap(-1,0);
+        break;
+        case 'up': //moveUp
+            print("action","Moving Up");
+            checkMap(0,-1);
+        break;
+        case 'right': //moveRight
+            print("action","Moving Right");
+            checkMap(+1,0);
+        break;
+        case 'down': //moveDown
+            print("action","Moving Down");
+            checkMap(0,+1);
+        break;
+    }
+    printInfo();
+}
+
+function showHelp() {
+    alert('Hello world! :)');
 }
 
 initCanvas(map.w*sellSize,map.h*sellSize);
