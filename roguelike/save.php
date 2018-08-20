@@ -1,6 +1,6 @@
 <?php
 
-$loc="save.txt"
+$loc="save.txt";
 $str="hello world!";
 
 file_put_contents($loc,$str);
