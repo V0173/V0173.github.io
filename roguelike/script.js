@@ -6,6 +6,8 @@ var fontSize=sellSize/2+sellSize/8;
 
 var player = {
     name: "digger",
+    exp: 0,
+    lvl: 1,
     health: 40,
     wealth: 0,
     damage: 5,
@@ -23,6 +25,7 @@ var monster = {
 };
 
 var map = {
+    lvl: 1, // level
     w: 10, // width
     h: 10, // height
     data: [
