@@ -1,4 +1,5 @@
-var timeID=0;
+var timerID=0;
+var game_over=false;
 var bgcolor='black';
 
 var infoBar = {
@@ -32,8 +33,9 @@ var ball = {
     x: 0,
     y: 0,
     r: 5,
+    dx: 0,
+    dy: 0,
     speed: 1,
-    route: 0,
     color: 'red' };
 
 var map = {
@@ -61,18 +63,34 @@ function initCanvas(w,h) {
     ctx.fillRect(0,0,w,h);
 }
 
+function resetGame() {
+    player.x=map.width/2;
+    player.y=map.height;
+    ball.x=player.x;
+    ball.y=player.y-(player.height+ball.r);
+    drawMap();
+    game_over=false;
+    timerID=0;
+}
+
 cnvs.onclick=function(event) {
-    var x=event.offsetX;
-    var y=event.offsetY;
-    //var str='X: '+x+'; Y: '+y+';';
-    //alert(str);
+    if (timerID==0 && game_over==false) {
+        ball.dy=-2;
+        timerID=setInterval(moveBall,5);
+    }
+    if (timerID==0 && game_over==true) {
+        resetGame();
+    }
 }
 
 cnvs.onmousemove=function(event) {
     var x=event.offsetX;
     var y=event.offsetY;
-    player.x=x;
-    drawMap();
+    if (game_over==false) {
+        player.x=x;
+        drawMap();
+        if (timerID==0) { ball.x=player.x; }
+    }
 }
 
 window.onkeydown=function(event) {
@@ -92,6 +110,31 @@ window.onkeydown=function(event) {
         default:
             //
         break;
+    }
+}
+
+function moveBall() {
+    ball.x+=ball.dx;
+    ball.y+=ball.dy;
+    checkRules();
+    if (game_over==false) { drawMap(); }
+}
+
+function checkRules() {
+    if (ball.x+ball.r>map.width) {
+        ball.dx=-ball.dx;
+    }
+    if (ball.x-ball.r<0) {
+        ball.dx=-ball.dx;
+    }
+    if (ball.y-ball.r<0) {
+        ball.dy=-ball.dy;
+    }
+    if (ball.y+ball.r>map.height) {
+        //game_over;
+        ball.dy=-ball.dy;
+        game_over=true;
+        drawText('GAME OVER',map.width/2,map.height/2);
     }
 }
 
@@ -149,10 +192,9 @@ function drawMap() {
    drawWall();
 */
    drawPlayer();
-//   drawBall();
+   drawBall();
 
 }
-
 
 function drawText(str,x,y) {
     ctx.fillStyle='yellow';
@@ -164,18 +206,20 @@ function drawText(str,x,y) {
     //ctx.strokeText(str,x,y);
 }
 
+/*
 function drawMsg(msg,delay) {
     if (delay===undefined) {
         delay=500;
     }
-    if (timeID!=0) {
+    if (timerID!=0) {
         clearTimeout();
-        timeID=0;
+        timerID=0;
     }
     drawMap();
     drawText(msg,map.width/2,map.height/2);
-    timeID=setTimeout(drawMap,delay);
+    timerID=setTimeout(drawMap,delay);
 }
+*/
 
 initCanvas(map.width,map.height);
-//drawMap();
+resetGame();
