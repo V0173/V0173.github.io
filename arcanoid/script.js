@@ -63,78 +63,60 @@ function initCanvas(w,h) {
     ctx.fillRect(0,0,w,h);
 }
 
+cnvs.onmousemove=function(event) {
+    if (game_over==false) {
+        var x=event.offsetX;
+        var y=event.offsetY;
+        player.x=x;
+        if (timerID==0) { 
+            ball.x=player.x; 
+            drawMap();
+            drawText('click to start',map.width/2,map.height/2);
+        }
+    }
+}
+
+cnvs.onclick=function(event) {
+    if (timerID==0 && game_over==false) {
+        timerID=setInterval(moveBall,5);
+    } else if (timerID!=0 && game_over==true) {
+        resetGame();
+    }
+}
+
 function resetGame() {
     player.x=map.width/2;
     player.y=map.height;
     ball.x=player.x;
     ball.y=player.y-(player.height+ball.r);
-    drawMap();
+    ball.dy=-2;
+    ball.dx=2;
     game_over=false;
     timerID=0;
-}
-
-cnvs.onclick=function(event) {
-    if (timerID==0 && game_over==false) {
-        ball.dy=-2;
-        timerID=setInterval(moveBall,5);
-    }
-    if (timerID==0 && game_over==true) {
-        resetGame();
-    }
-}
-
-cnvs.onmousemove=function(event) {
-    var x=event.offsetX;
-    var y=event.offsetY;
-    if (game_over==false) {
-        player.x=x;
-        drawMap();
-        if (timerID==0) { ball.x=player.x; }
-    }
-}
-
-window.onkeydown=function(event) {
-    switch (event.keyCode) {
-        case 37: //moveLeft
-
-        break;
-        case 38: //moveUp
-
-        break;
-        case 39: //moveRight
-
-        break;
-        case 40: //moveDown
-
-        break;
-        default:
-            //
-        break;
-    }
+    drawMap();
+    drawText('click to start',map.width/2,map.height/2);
 }
 
 function moveBall() {
     ball.x+=ball.dx;
     ball.y+=ball.dy;
-    checkRules();
-    if (game_over==false) { drawMap(); }
-}
 
-function checkRules() {
     if (ball.x+ball.r>map.width) {
         ball.dx=-ball.dx;
-    }
-    if (ball.x-ball.r<0) {
+    } else if (ball.x-ball.r<0) {
         ball.dx=-ball.dx;
-    }
-    if (ball.y-ball.r<0) {
+    } else if (ball.y-ball.r<0) {
         ball.dy=-ball.dy;
-    }
-    if (ball.y+ball.r>map.height) {
-        //game_over;
-        ball.dy=-ball.dy;
+    } else if (ball.y+ball.r>map.height) {
+        //ball.dy=-ball.dy;
         game_over=true;
-        drawText('GAME OVER',map.width/2,map.height/2);
+        clearInterval(timerID);
+        drawText('GAME OVER',map.width/2,map.height/2,'bottom');
+        drawText('click to reset',map.width/2,map.height/2,'hanging');
+    }
+
+    if (game_over==false) {
+        drawMap();
     }
 }
 
@@ -184,42 +166,27 @@ function drawBlock(x,y) {
 }
 
 function drawMap() {
-   ctx.clearRect(0,0,map.width,map.height);
-   ctx.fillStyle=bgcolor;
-   ctx.fillRect(0,0,map.width,map.height);
+    ctx.clearRect(0,0,map.width,map.height);
+    ctx.fillStyle=bgcolor;
+    ctx.fillRect(0,0,map.width,map.height);
 /*
-   drawInfoBar();
-   drawWall();
+    drawInfoBar();
+    drawWall();
 */
-   drawPlayer();
-   drawBall();
-
+    drawPlayer();
+    drawBall();
 }
 
-function drawText(str,x,y) {
+function drawText(str,x,y,valign) {
+    if (valign===undefined) { valign='middle'; }
     ctx.fillStyle='yellow';
     //ctx.strokeStyle='dodgerblue';
     ctx.font=fontSize+' bold fixedsys';
-    ctx.textBaseline='middle';
+    ctx.textBaseline=valign;
     ctx.textAlign='center';
     ctx.fillText(str,x,y);
     //ctx.strokeText(str,x,y);
 }
-
-/*
-function drawMsg(msg,delay) {
-    if (delay===undefined) {
-        delay=500;
-    }
-    if (timerID!=0) {
-        clearTimeout();
-        timerID=0;
-    }
-    drawMap();
-    drawText(msg,map.width/2,map.height/2);
-    timerID=setTimeout(drawMap,delay);
-}
-*/
 
 initCanvas(map.width,map.height);
 resetGame();
