@@ -1,5 +1,6 @@
 var timerID=0;
 var game_over=false;
+var game_stop=false;
 var bgcolor='black';
 
 var infoBar = {
@@ -9,13 +10,17 @@ var infoBar = {
 
 var wall = {
     width: 11,
-    height: 5 };
+    height: 5,
+    data: [] };
 
 var block = {
+    x: 0,
+    y: 0,
     width: 40,
     height: 20,
     color: 'dodgerblue',
     indent: 2,
+    crashed: false,
     bonus: 'n' };
 
 var player = {
@@ -25,7 +30,7 @@ var player = {
     lives: 3,
     width: 80,
     height: 10, 
-    color: 'dodgerblue',
+    color: 'teal',
     indent: 2,
     bonus: 'n' };
 
@@ -35,8 +40,8 @@ var ball = {
     r: 5,
     dx: 0,
     dy: 0,
-    speed: 1,
-    color: 'red' };
+    speed: 5, //more -> slower moving
+    color: 'goldenrod' };
 
 var map = {
     width: 0,
@@ -55,6 +60,32 @@ var fontSize=16;
 
 var cnvs=document.getElementById('cnvs');
 var ctx=cnvs.getContext('2d');
+
+function copyObject(to,from) {
+    for (var key in from) {
+        to[key]=from[key];
+    }
+}
+
+function generateWall () {
+   var x=0;
+   var y=infoBar.height;
+   for (var i=0; i<wall.height; i++) {
+       wall.data[i]=[];
+       if (i%2==0) { block.color='crimson'; } else { block.color='dodgerblue'; }
+       for (var j=0; j<wall.width; j++) {
+           block.x=x;
+           block.y=y;
+           wall.data[i][j]={};
+           copyObject(wall.data[i][j],block);
+           x+=block.width;
+           //console.log(wall.data[i][j].x+':'+wall.data[i][j].y+'; ');
+           //console.log(wall.data[i][j].color);
+       }
+       x=0;
+       y+=block.height
+   }
+}
 
 function initCanvas(w,h) {
     cnvs.width=w;
@@ -78,19 +109,36 @@ cnvs.onmousemove=function(event) {
 
 cnvs.onclick=function(event) {
     if (timerID==0 && game_over==false) {
-        timerID=setInterval(moveBall,5);
-    } else if (timerID!=0 && game_over==true) {
+        timerID=setInterval(moveBall,ball.speed);
+    } else if (timerID!=0 && game_over) {
         resetGame();
+    } else if (game_stop) {
+        resetBall();
     }
 }
 
-function resetGame() {
+function toStartPosition() {
     player.x=map.width/2;
     player.y=map.height;
     ball.x=player.x;
     ball.y=player.y-(player.height+ball.r);
     ball.dy=-2;
     ball.dx=2;
+}
+
+function resetBall() {
+    toStartPosition();
+    game_stop=false;
+    timerID=0;
+    drawMap();
+    drawText('click to continue',map.width/2,map.height/2);
+}
+
+function resetGame() {
+    generateWall();
+    toStartPosition();
+    player.lives=3;
+    player.score=0;
     game_over=false;
     timerID=0;
     drawMap();
@@ -101,23 +149,70 @@ function moveBall() {
     ball.x+=ball.dx;
     ball.y+=ball.dy;
 
-    if (ball.x+ball.r>map.width) {
+    if (ball.y+ball.r>=player.y-player.height && (ball.x+ball.r>=player.x-player.width/2 && ball.x-ball.r<=player.x+player.width/2)) {
+        ball.dy=-ball.dy;
+    }
+
+    if (ball.x+ball.r>map.width) { //from right border
         ball.dx=-ball.dx;
-    } else if (ball.x-ball.r<0) {
+    } else if (ball.x-ball.r<0) { //from left border
         ball.dx=-ball.dx;
-    } else if (ball.y-ball.r<0) {
+    } else if (ball.y-ball.r<0) { //from top border
         ball.dy=-ball.dy;
     } else if (ball.y+ball.r>map.height) {
-        //ball.dy=-ball.dy;
-        game_over=true;
         clearInterval(timerID);
-        drawText('GAME OVER',map.width/2,map.height/2,'bottom');
-        drawText('click to reset',map.width/2,map.height/2,'hanging');
+        player.lives--;
+        if (player.lives==0) {
+            game_over=true;
+            drawText('GAME OVER',map.width/2,map.height/2,'bottom');
+            drawText('click to reset',map.width/2,map.height/2,'hanging');
+        } else {
+            game_stop=true;
+            drawText('click to continue',map.width/2,map.height/2);
+        }
+    }
+
+    for (var i=0; i<wall.height; i++) {
+        for (var j=0; j<wall.width; j++) {
+            if (wall.data[i][j].crashed==false) {
+                checkHit(wall.data[i][j]);
+            }
+        }
     }
 
     if (game_over==false) {
         drawMap();
     }
+}
+
+function checkHit(blk) {
+    var x=blk.x+blk.width/2;
+    var y=blk.y+blk.height/2;
+    if ((ball.y+ball.r>=y-blk.height/2 && ball.y-ball.r<=y+blk.height/2) && (ball.x+ball.r>=x-blk.width/2 && ball.x-ball.r<=x+blk.width/2)) {
+        blk.crashed=true;
+        player.score+=10;
+    }
+
+    //hit from bottom
+    if ((ball.y-ball.r<=y+blk.height/2 && ball.y-ball.r>blk.y) && (ball.x+ball.r>=x-blk.width/2 && ball.x-ball.r<=x+blk.width/2)) {
+        ball.dy=-ball.dy;
+    }
+
+    //hit from top
+    if ((ball.y+ball.r>=y-blk.height/2 && ball.y+ball.r<blk.y) && (ball.x+ball.r>=x-blk.width/2 && ball.x-ball.r<=x+blk.width/2)) {
+        ball.dy=-ball.dy;
+    }
+
+    //hit from left
+    if ((ball.x+ball.r>=x-blk.width/2 && ball.x+ball.r<blk.x) && (ball.y+ball.r>=y-blk.height/2 && ball.y-ball.r<=y+blk.height/2))  {
+        ball.dx=-ball.dx;
+    }
+
+    //hit from right
+    if ((ball.x-ball.r>=x+blk.width/2 && ball.x+ball.r>blk.x) && (ball.y+ball.r>=y-blk.height/2 && ball.y-ball.r<=y+blk.height/2))  {
+        ball.dx=-ball.dx;
+    }
+
 }
 
 function drawInfoBar() {
@@ -128,15 +223,13 @@ function drawInfoBar() {
 }
 
 function drawWall() {
-   var x=0;
-   var y=infoBar.height;
    for (var i=0; i<wall.height; i++) {
        for (var j=0; j<wall.width; j++) {
-           drawBlock(x,y);
-           x+=block.width;
+           drawBlock(wall.data[i][j]);
+           //drawBlock(wall.data[i][j].x,wall.data[i][j].y);
+           //drawBlock(x,y,width,height,color,indent);
+           //console.log(wall.data[i][j].x+':'+wall.data[i][j].y+'; ');
        }
-       x=0;
-       y+=block.height
    }
 }
 
@@ -157,22 +250,22 @@ function drawBall() {
     ctx.closePath();
 }
 
-function drawBlock(x,y) {
-    ctx.fillStyle=block.color;
-    ctx.fillRect(x,y,block.width,block.height);
-    ctx.strokeStyle=bgcolor;
-    ctx.lineWidth=block.indent;
-    ctx.strokeRect(x,y,block.width,block.height);
+function drawBlock(blk) {
+    if (blk.crashed==false) {
+        ctx.fillStyle=blk.color;
+        ctx.fillRect(blk.x,blk.y,blk.width,blk.height);
+        ctx.strokeStyle=bgcolor;
+        ctx.lineWidth=blk.indent;
+        ctx.strokeRect(blk.x,blk.y,blk.width,blk.height);
+    }
 }
 
 function drawMap() {
     ctx.clearRect(0,0,map.width,map.height);
     ctx.fillStyle=bgcolor;
     ctx.fillRect(0,0,map.width,map.height);
-/*
     drawInfoBar();
     drawWall();
-*/
     drawPlayer();
     drawBall();
 }
