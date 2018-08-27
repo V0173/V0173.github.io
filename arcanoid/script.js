@@ -196,21 +196,18 @@ function hit(blk,dxy) {
 }
 
 function checkHit(blk) {
-    var x=blk.x+blk.width/2; //x of block center
-    var y=blk.y+blk.height/2; //y of block center
-    var block_ls=x-(blk.width/2-blk.indent); //x of block left side
-    var block_rs=x+(blk.width/2-blk.indent); //x of block right side
-    var block_ts=y-(blk.height/2-blk.indent); //y of block top side
-    var block_bs=y+(blk.height/2-blk.indent); //y of block bottom side
-    var ball_ls=ball.x-ball.r; //x of ball left side
-    var ball_rs=ball.x+ball.r; //x of ball right side
-    var ball_ts=ball.y-ball.r; //y of ball top side
-    var ball_bs=ball.y+ball.r; //y of ball bottom side
+    var block_xcp=blk.x+blk.width/2; //x of block center point
+    var block_ycp=blk.y+blk.height/2; //y of block center point
 
-    if ((ball_rs>block_ls && ball_ls<block_rs) && (ball_ts<=block_bs && ball.y>y)) { hit(blk,'dy'); } //hit from bottom
-    if ((ball_rs>block_ls && ball_ls<block_rs) && (ball_bs>=block_ts && ball.y<y)) { hit(blk,'dy'); } //hit from top
-    if ((ball_ts<block_bs && ball_bs>block_ts) && (ball_rs>=block_ls && ball.x<x)) { hit(blk,'dx'); } //hit from left
-    if ((ball_ts<block_bs && ball_bs>block_ts) && (ball_ls<=block_rs && ball.x>x)) { hit(blk,'dx'); } //hit from right
+    //hit from top or bottom
+    if ((ball.x>blk.x && ball.x<blk.x+blk.width) && ((ball.y+ball.r>blk.y && ball.y<block_ycp) || (ball.y-ball.r<blk.y+blk.height && ball.y>block_ycp))) {
+        hit(blk,'dy');
+    }
+
+    //hit from left or right
+    if ((ball.y>blk.y && ball.y<blk.y+blk.height) && ((ball.x+ball.r>blk.x && ball.x<block_xcp) || (ball.x-ball.r<blk.x+blk.width && ball.x>block_xcp))) {
+        hit(blk,'dx');
+    }
 }
 
 function drawInfoBar() {
