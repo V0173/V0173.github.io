@@ -40,7 +40,7 @@ var ball = {
     r: 5,
     dx: 0,
     dy: 0,
-    speed: 5, //more -> slower moving
+    speed: 10, //more -> slower moving
     color: 'goldenrod' };
 
 var map = {
@@ -48,12 +48,8 @@ var map = {
     height: 0 };
 
     map.width=wall.width*block.width;
-    map.height=4*(wall.height*block.height)+player.height+infoBar.height;
+    map.height=4*(wall.height*block.height)+player.height*2+infoBar.height;
     infoBar.width=map.width;
-    player.x=map.width/2;
-    player.y=map.height;
-    ball.x=player.x;
-    ball.y=player.y-(player.height+ball.r);
 
 var fontSize=16;
     fontSize+='pt';
@@ -119,11 +115,11 @@ cnvs.onclick=function(event) {
 
 function toStartPosition() {
     player.x=map.width/2;
-    player.y=map.height;
+    player.y=map.height-2*player.height;
     ball.x=player.x;
-    ball.y=player.y-(player.height+ball.r);
-    ball.dy=-2;
-    ball.dx=2;
+    ball.y=player.y-ball.r;
+    ball.dy=-3;
+    ball.dx=0;
 }
 
 function resetBall() {
@@ -149,8 +145,9 @@ function moveBall() {
     ball.x+=ball.dx;
     ball.y+=ball.dy;
 
-    if (ball.y+ball.r>=player.y-player.height && (ball.x+ball.r>=player.x-player.width/2 && ball.x-ball.r<=player.x+player.width/2)) {
+    if (ball.y+ball.r>=player.y && (ball.x+ball.r>=player.x-player.width/2 && ball.x-ball.r<=player.x+player.width/2)) {
         ball.dy=-ball.dy;
+        if (ball.x<player.x-player.width/4) { ball.dx--; } else if (ball.x>player.x+player.width/4) { ball.dx++; }
     }
 
     if (ball.x+ball.r>map.width) { //from right border
@@ -198,14 +195,18 @@ function hit(blk,dxy) {
 function checkHit(blk) {
     var block_xcp=blk.x+blk.width/2; //x of block center point
     var block_ycp=blk.y+blk.height/2; //y of block center point
+    var block_ls=blk.x+blk.indent; //x of block left side
+    var block_rs=blk.x+blk.width-blk.indent; //x of block right side
+    var block_ts=blk.y+blk.indent; //y of block top side
+    var block_bs=blk.y+blk.height-blk.indent; //y of block bottom side
 
     //hit from top or bottom
-    if ((ball.x>blk.x && ball.x<blk.x+blk.width) && ((ball.y+ball.r>blk.y && ball.y<block_ycp) || (ball.y-ball.r<blk.y+blk.height && ball.y>block_ycp))) {
+    if ((ball.x>block_ls && ball.x<block_rs) && ((ball.y+ball.r>block_ts && ball.y<block_ycp) || (ball.y-ball.r<block_bs && ball.y>block_ycp))) {
         hit(blk,'dy');
     }
 
     //hit from left or right
-    if ((ball.y>blk.y && ball.y<blk.y+blk.height) && ((ball.x+ball.r>blk.x && ball.x<block_xcp) || (ball.x-ball.r<blk.x+blk.width && ball.x>block_xcp))) {
+    if ((ball.y>block_ts && ball.y<block_bs) && ((ball.x+ball.r>block_ls && ball.x<block_xcp) || (ball.x-ball.r<block_rs && ball.x>block_xcp))) {
         hit(blk,'dx');
     }
 }
@@ -230,10 +231,10 @@ function drawWall() {
 
 function drawPlayer() {
     ctx.fillStyle=player.color;
-    ctx.fillRect(player.x-player.width/2,player.y-player.height,player.width,player.height);
+    ctx.fillRect(player.x-player.width/2,player.y,player.width,player.height);
     ctx.strokeStyle=bgcolor;
     ctx.lineWidth=player.indent;
-    ctx.strokeRect(player.x-player.width/2,player.y-player.height,player.width,player.height);
+    ctx.strokeRect(player.x-player.width/2,player.y,player.width,player.height);
 };
 
 function drawBall() {
