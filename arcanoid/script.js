@@ -200,8 +200,8 @@ function checkHit(blk) {
     var y=blk.y+blk.height/2; //y of block center
     var block_ls=x-(blk.width/2-blk.indent); //x of block left side
     var block_rs=x+(blk.width/2-blk.indent); //x of block right side
-    var block_ts=y-(blk.width/2-blk.indent); //y of block top side
-    var block_bs=y+(blk.width/2-blk.indent); //y of block bottom side
+    var block_ts=y-(blk.height/2-blk.indent); //y of block top side
+    var block_bs=y+(blk.height/2-blk.indent); //y of block bottom side
     var ball_ls=ball.x-ball.r; //x of ball left side
     var ball_rs=ball.x+ball.r; //x of ball right side
     var ball_ts=ball.y-ball.r; //y of ball top side
