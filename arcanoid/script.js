@@ -141,13 +141,34 @@ function resetGame() {
     drawText('click to start',map.width/2,map.height/2);
 }
 
+function rebound() {
+    var sector=player.width/8;
+    if (ball.x>player.x) {
+        if (ball.x>player.x+3*sector) {
+            ball.dx+=3;
+        } else if (ball.x>player.x+2*sector) {
+            ball.dx+=2;
+        } else if (ball.x>player.x+sector) {
+            ball.dx+=1;
+        }
+    } else if (ball.x<player.x) {
+        if (ball.x<player.x-3*sector) {
+            ball.dx-=3;
+        } else if (ball.x<player.x-2*sector) {
+            ball.dx-=2;
+        } else if (ball.x<player.x-sector) {
+            ball.dx-=1;
+        }
+    }
+}
+
 function moveBall() {
     ball.x+=ball.dx;
     ball.y+=ball.dy;
 
     if (ball.y+ball.r>=player.y && (ball.x+ball.r>=player.x-player.width/2 && ball.x-ball.r<=player.x+player.width/2)) {
         ball.dy=-ball.dy;
-        if (ball.x<player.x-player.width/4) { ball.dx--; } else if (ball.x>player.x+player.width/4) { ball.dx++; }
+        rebound();
     }
 
     if (ball.x+ball.r>map.width) { //from right border
