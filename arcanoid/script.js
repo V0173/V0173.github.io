@@ -185,34 +185,32 @@ function moveBall() {
     }
 }
 
+function hit(blk,dxy) {
+    if (dxy=='dx') {
+        ball.dx=-ball.dx;
+    } else if (dxy=='dy') {
+        ball.dy=-ball.dy;
+    }
+    blk.crashed=true;
+    player.score+=10;
+}
+
 function checkHit(blk) {
-    var x=blk.x+blk.width/2;
-    var y=blk.y+blk.height/2;
-    if ((ball.y+ball.r>=y-blk.height/2 && ball.y-ball.r<=y+blk.height/2) && (ball.x+ball.r>=x-blk.width/2 && ball.x-ball.r<=x+blk.width/2)) {
-        blk.crashed=true;
-        player.score+=10;
-    }
+    var x=blk.x+blk.width/2; //x of block center
+    var y=blk.y+blk.height/2; //y of block center
+    var block_ls=x-(blk.width/2-blk.indent); //x of block left side
+    var block_rs=x+(blk.width/2-blk.indent); //x of block right side
+    var block_ts=y-(blk.width/2-blk.indent); //y of block top side
+    var block_bs=y+(blk.width/2-blk.indent); //y of block bottom side
+    var ball_ls=ball.x-ball.r; //x of ball left side
+    var ball_rs=ball.x+ball.r; //x of ball right side
+    var ball_ts=ball.y-ball.r; //y of ball top side
+    var ball_bs=ball.y+ball.r; //y of ball bottom side
 
-    //hit from bottom
-    if ((ball.y-ball.r<=y+blk.height/2 && ball.y-ball.r>blk.y) && (ball.x+ball.r>=x-blk.width/2 && ball.x-ball.r<=x+blk.width/2)) {
-        ball.dy=-ball.dy;
-    }
-
-    //hit from top
-    if ((ball.y+ball.r>=y-blk.height/2 && ball.y+ball.r<blk.y) && (ball.x+ball.r>=x-blk.width/2 && ball.x-ball.r<=x+blk.width/2)) {
-        ball.dy=-ball.dy;
-    }
-
-    //hit from left
-    if ((ball.x+ball.r>=x-blk.width/2 && ball.x+ball.r<blk.x) && (ball.y+ball.r>=y-blk.height/2 && ball.y-ball.r<=y+blk.height/2))  {
-        ball.dx=-ball.dx;
-    }
-
-    //hit from right
-    if ((ball.x-ball.r>=x+blk.width/2 && ball.x+ball.r>blk.x) && (ball.y+ball.r>=y-blk.height/2 && ball.y-ball.r<=y+blk.height/2))  {
-        ball.dx=-ball.dx;
-    }
-
+    if ((ball_rs>block_ls && ball_ls<block_rs) && (ball_ts<=block_bs && ball.y>y)) { hit(blk,'dy'); } //hit from bottom
+    if ((ball_rs>block_ls && ball_ls<block_rs) && (ball_bs>=block_ts && ball.y<y)) { hit(blk,'dy'); } //hit from top
+    if ((ball_ts<block_bs && ball_bs>block_ts) && (ball_rs>=block_ls && ball.x<x)) { hit(blk,'dx'); } //hit from left
+    if ((ball_ts<block_bs && ball_bs>block_ts) && (ball_ls<=block_rs && ball.x>x)) { hit(blk,'dx'); } //hit from right
 }
 
 function drawInfoBar() {
