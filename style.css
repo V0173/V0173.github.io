@@ -4,6 +4,8 @@ body {
 }
 
 ul {
+   display: table-cell;
+   text-align: left;
    list-style: none;
 }
 
