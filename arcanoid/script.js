@@ -91,7 +91,7 @@ function initCanvas(w,h) {
 }
 
 cnvs.onmousemove=function(event) {
-    if (game_over==false) {
+    if (game_over==false && game_stop==false) {
         var x=event.offsetX;
         var y=event.offsetY;
         player.x=x;
@@ -106,10 +106,10 @@ cnvs.onmousemove=function(event) {
 cnvs.onclick=function(event) {
     if (timerID==0 && game_over==false) {
         timerID=setInterval(moveBall,ball.speed);
-    } else if (timerID!=0 && game_over) {
-        resetGame();
     } else if (game_stop) {
         resetBall();
+    } else if (timerID!=0 && game_over) {
+        resetGame();
     }
 }
 
@@ -180,6 +180,7 @@ function moveBall() {
     } else if (ball.y+ball.r>map.height) {
         clearInterval(timerID);
         player.lives--;
+        drawMap();
         if (player.lives==0) {
             game_over=true;
             drawText('GAME OVER',map.width/2,map.height/2,'bottom');
@@ -198,7 +199,7 @@ function moveBall() {
         }
     }
 
-    if (game_over==false) {
+    if (game_over==false && game_stop==false) {
         drawMap();
     }
 }
@@ -211,6 +212,13 @@ function hit(blk,dxy) {
     }
     blk.crashed=true;
     player.score+=10;
+    if (player.score==wall.width*wall.height*10) {
+        clearInterval(timerID);
+        game_over=true;
+        drawMap();
+        drawText('CONGRATULATIONS',map.width/2,map.height/2,'bottom');
+        drawText('YOU WON',map.width/2,map.height/2,'hanging');
+    }
 }
 
 function checkHit(blk) {
