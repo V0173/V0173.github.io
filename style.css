@@ -12,3 +12,7 @@ ul {
 li {
    margin-bottom: 3px;
 }
+
+#running_string {
+   text-align: left;
+}
