@@ -1,19 +1,37 @@
 body {
-   background-color: grey;
+   background-color: gray;
+   background-image: url(images/hexagon.jpg);
    font-family: monospace;
 }
 
 ul {
-   display: table-cell;
-   text-align: left;
-   list-style: none;
+    display: table-cell;
+    list-style: none;
+    text-align: left;
 }
 
 li {
    margin-bottom: 3px;
 }
 
+div {
+    width: 120px;
+    display: table-cell;
+    text-align: left;
+    background: gold;
+}
+
+a {
+    text-decoration: none;
+}
+
+.menu_title {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-left: -10px;
+}
+
 #running_string {
-   display: table-cell;
-   text-align: left;
+    margin: 20px;
+    color: red;
 }
