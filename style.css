@@ -14,5 +14,6 @@ li {
 }
 
 #running_string {
+   display: table-cell;
    text-align: left;
 }
