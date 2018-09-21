@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+<title>Password generator</title>
+</head>
+<body>
+<center>
+<h2>Генератор паролей</h2>
+
+<table>
+<tr><td colspan="2">
+<input type="text" placeholder="Here will be your password" id="result" size="30"></input><br>
+</td></tr>
+<tr>
+<td>
+<input id="s1" type="checkbox" name="simbols">a-z</input><br>
+<input id="s2" type="checkbox" name="simbols">A-Z</input><br>
+<input id="s3" type="checkbox" name="simbols">0-9</input><br>
+<input id="s4" type="checkbox" name="simbols">!-+</input><br>
+<input type="text" placeholder="Enter length" id="pwlen" size="10"></input><br>
+</td>
+<td>
+<button onclick="go()">Генерировать</button><br>
+<button onclick="reset('result')">Очистить</button><br>
+</td>
+</tr>
+</table>
+
+<p id="info"></p>
+</center>
+</body>
+</html>
+
