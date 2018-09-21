@@ -68,6 +68,8 @@ function drawFugures() {
     for (var j=1; j<9; j++) {
         for (var i=1; i<9; i++) {
             placeID=index_x[i]+index_y[j];
+            var target=document.getElementById(placeID);
+            target.innerHTML=black_figures[start_position[i][j]];
         }
     }
 }
