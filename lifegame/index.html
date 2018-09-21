@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+<title>Life game</title>
+</head>
+<body onload="main()">
+<center>
+<h1>LIFE GAME</h1>
+<canvas id="canvas" width="600" height="600"></canvas>
+<br>
+<input type="text" placeholder="Cell size (px)" id="cellSize"></input>
+<button onclick="changeSize('cell')">Apply</button><br>
+<input type="text" placeholder="Field width (px)" id="field_W"></input>
+<button onclick="changeSize('field')">Apply</button><br>
+<input type="text" placeholder="Field height (px)" id="field_H"></input>
+<button onclick="changeSize('field')">Apply</button><br>
+<input type="text" placeholder="Delay (ms)" id="delaySize"></input>
+<button onclick="game('delay')">Apply</button>
+<p>
+Cell size: <b id="cell"></b><br>
+Field size: <b id="field"></b><br>
+Delay: <b id="delay"></b><br>
+Generation: <b id="generation"></b>. 
+Population: <b id="population"></b>.
+</p>
+<button onclick="game('start')">Start/Stop</button>
+<button onclick="game('reset')">Reset</button>
+<button onclick="game('rules')">Show rules</button>
+</center>
+</body>
+</html>
