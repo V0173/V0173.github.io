@@ -1,0 +1,36 @@
+
+table {
+  background: yellow;
+  border-collapse: collapse;
+  color: gold;
+  text-shadow: black 2px 2px 1px;
+}
+
+td {
+  text-align: center;
+  border: 1px solid gray;
+  width: 30px;
+  height: 30px;
+  padding: 0px;
+}
+
+.black {
+  background: saddlebrown;
+}
+
+.white {
+  background: burlywood;
+}
+
+.highlight {
+  opacity: .5;
+}
+
+.board_border {
+  background: maroon;
+}
+
+td[name=cell]:hover {
+  background: gold;
+  //opacity: .5;
+}
