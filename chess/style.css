@@ -26,6 +26,11 @@ td {
   opacity: .5;
 }
 
+.inner_border {
+  outline: 2px solid yellow;
+  outline-offset: -2px;
+}
+
 .board_border {
   background: maroon;
 }

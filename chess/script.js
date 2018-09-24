@@ -1,5 +1,9 @@
+var tmpID;
+var picked;
 var white_figures=['','&#9817;','&#9816;','&#9815;','&#9814;','&#9813;','&#9812;'];
 var black_figures=['','&#9823;','&#9822;','&#9821;','&#9820;','&#9819;','&#9818;'];
+var figures_names_en=['','pawn','knight','bishop','tower','queen','king'];
+var figures_names_ru=['','пешка','конь','слон','ладья','ферзь','король'];
 var index_x=['','A','B','C','D','E','F','G','H',''];
 var index_y=['','8','7','6','5','4','3','2','1',''];
 var start_position=[
@@ -18,7 +22,7 @@ var start_position=[
 drawBoard('chess_board');
 drawFigures();
 
-/*cell highlighting on mouseover
+/*cell highlighting on mouseover maked by css
 var board_table=document.getElementById('board');
 board_table.onmouseover=board_table.onmouseout=function(event) {
     var target=event.target;
@@ -27,6 +31,34 @@ board_table.onmouseover=board_table.onmouseout=function(event) {
     }
 }
 */
+
+var board_table=document.getElementById('board');
+var info_board
+
+board_table.onclick=function(event) {
+    var target=event.target;
+    if (target.tagName=='TD' && target.id!='') {
+        if (!tmpID) {
+            tmpID=event.target.id;
+        } else {
+            document.getElementById(tmpID).classList.toggle('inner_border');
+        }
+        target.classList.toggle('inner_border');
+        tmpID=event.target.id;
+
+        picked=target.innerHTML;
+        if (picked) {
+            if (white_figures.indexOf(picked)!=-1) {
+                print('info', 'white ' + figures_names_en[white_figures.indexOf(picked)] +' on '+target.id);
+            } else {
+                print('info', 'black ' + figures_names_en[black_figures.indexOf(picked)] +' on '+target.id);
+            }
+            
+        } else {
+                print('info',target.id);
+        }
+    }
+}
 
 function print(id,str) {
     var target=document.getElementById(id);
@@ -71,8 +103,10 @@ function drawFigures() {
             var target=document.getElementById(placeID);
             if (j<5) {
                 target.innerHTML=black_figures[start_position[j][i]];
+                black_figures[start_position[j][i]]=target.innerHTML;
             } else {
                 target.innerHTML=white_figures[start_position[j][i]];
+                white_figures[start_position[j][i]]=target.innerHTML;
             }
         }
     }
