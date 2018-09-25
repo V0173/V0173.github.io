@@ -1,8 +1,9 @@
 var tmpID, picked, picked_tmp;
-var white_figures=['','&#9817;','&#9816;','&#9815;','&#9814;','&#9813;','&#9812;'];
-var black_figures=['','&#9823;','&#9822;','&#9821;','&#9820;','&#9819;','&#9818;'];
-var figures_names_en=['','pawn','knight','bishop','tower','queen','king'];
-var figures_names_ru=['','пешка','конь','слон','ладья','ферзь','король'];
+var whiteFiguresColor='white';
+var blackFiguresColor='black';
+var figures=['','&#9823;','&#9822;','&#9821;','&#9820;','&#9819;','&#9818;'];
+var figuresNamesEn=['','pawn','knight','bishop','tower','queen','king'];
+var figuresNamesRu=['','пешка','конь','слон','ладья','ферзь','король'];
 var index_x=['','A','B','C','D','E','F','G','H',''];
 var index_y=['','8','7','6','5','4','3','2','1',''];
 var start_position=[
@@ -45,31 +46,33 @@ board_table.onclick=function(event) {
             document.getElementById(tmpID).classList.toggle('inner_border');
         }
         target.classList.toggle('inner_border');
-        //tmpID=event.target.id;
 
         if (picked) {    //если выбрана фигура пишем её название и цвет
-            if (white_figures.indexOf(picked)!=-1) {
-                print('info', 'white ' + figures_names_en[white_figures.indexOf(picked)] +' on '+target.id);
+            if (target.style.color==whiteFiguresColor) {
+                print('info', 'white ' + figuresNamesEn[figures.indexOf(picked)] +' on '+target.id);
                 picked_tmp=picked;
             } else {
-                print('info', 'black ' + figures_names_en[black_figures.indexOf(picked)] +' on '+target.id);
+                print('info', 'black ' + figuresNamesEn[figures.indexOf(picked)] +' on '+target.id);
                 picked_tmp=picked;
             }
             
-        } else if (picked_tmp) {
+        } else if (picked_tmp) {    //если фигура уже была выбрана ранее
             target.innerHTML=picked_tmp;
-            if (white_figures.indexOf(picked_tmp)!=-1) {
-                print('info', 'white ' + figures_names_en[white_figures.indexOf(picked_tmp)] +' go on '+target.id);
+            if (document.getElementById(tmpID).style.color==whiteFiguresColor) {
+                print('info', 'white ' + figuresNamesEn[figures.indexOf(picked_tmp)] +' go on '+target.id);
+                target.style.color=whiteFiguresColor;
                 print(tmpID,'');
                 picked_tmp='';
             } else {
-                print('info', 'black ' + figures_names_en[black_figures.indexOf(picked_tmp)] +' go on '+target.id);
+                print('info', 'black ' + figuresNamesEn[figures.indexOf(picked_tmp)] +' go on '+target.id);
+                target.style.color=blackFiguresColor;
                 print(tmpID,'');
                 picked_tmp='';
             }
         } else {
                 print('info',target.id);
         }
+
         tmpID=event.target.id;
     }
 }
@@ -116,11 +119,13 @@ function drawFigures() {    //расставляем фигуры в исходное положение
             placeID=index_x[i]+index_y[j];
             var target=document.getElementById(placeID);
             if (j<5) {
-                target.innerHTML=black_figures[start_position[j][i]];
-                black_figures[start_position[j][i]]=target.innerHTML;
+                target.innerHTML=figures[start_position[j][i]];
+                figures[start_position[j][i]]=target.innerHTML;
+                target.style.color=blackFiguresColor;
             } else {
-                target.innerHTML=white_figures[start_position[j][i]];
-                white_figures[start_position[j][i]]=target.innerHTML;
+                target.innerHTML=figures[start_position[j][i]];
+                figures[start_position[j][i]]=target.innerHTML;
+                target.style.color=whiteFiguresColor;
             }
         }
     }
