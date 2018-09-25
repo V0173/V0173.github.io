@@ -1,5 +1,4 @@
-var tmpID;
-var picked;
+var tmpID, picked, picked_tmp;
 var white_figures=['','&#9817;','&#9816;','&#9815;','&#9814;','&#9813;','&#9812;'];
 var black_figures=['','&#9823;','&#9822;','&#9821;','&#9820;','&#9819;','&#9818;'];
 var figures_names_en=['','pawn','knight','bishop','tower','queen','king'];
@@ -22,7 +21,7 @@ var start_position=[
 drawBoard('chess_board');
 drawFigures();
 
-/*cell highlighting on mouseover maked by css
+/*подсветка клетки при наведении курсора - сделано через CSS
 var board_table=document.getElementById('board');
 board_table.onmouseover=board_table.onmouseout=function(event) {
     var target=event.target;
@@ -37,26 +36,41 @@ var info_board
 
 board_table.onclick=function(event) {
     var target=event.target;
-    if (target.tagName=='TD' && target.id!='') {
+    picked=target.innerHTML;
+
+    if (target.tagName=='TD' && target.id!='') {    //рисуем рамку вокруг выбранной клетки
         if (!tmpID) {
-            tmpID=event.target.id;
+            tmpID=target.id;
         } else {
             document.getElementById(tmpID).classList.toggle('inner_border');
         }
         target.classList.toggle('inner_border');
-        tmpID=event.target.id;
+        //tmpID=event.target.id;
 
-        picked=target.innerHTML;
-        if (picked) {
+        if (picked) {    //если выбрана фигура пишем её название и цвет
             if (white_figures.indexOf(picked)!=-1) {
                 print('info', 'white ' + figures_names_en[white_figures.indexOf(picked)] +' on '+target.id);
+                picked_tmp=picked;
             } else {
                 print('info', 'black ' + figures_names_en[black_figures.indexOf(picked)] +' on '+target.id);
+                picked_tmp=picked;
             }
             
+        } else if (picked_tmp) {
+            target.innerHTML=picked_tmp;
+            if (white_figures.indexOf(picked_tmp)!=-1) {
+                print('info', 'white ' + figures_names_en[white_figures.indexOf(picked_tmp)] +' go on '+target.id);
+                print(tmpID,'');
+                picked_tmp='';
+            } else {
+                print('info', 'black ' + figures_names_en[black_figures.indexOf(picked_tmp)] +' go on '+target.id);
+                print(tmpID,'');
+                picked_tmp='';
+            }
         } else {
                 print('info',target.id);
         }
+        tmpID=event.target.id;
     }
 }
 
@@ -70,7 +84,7 @@ function showContent(id) {
     alert(target.innerHTML);
 }
 
-function drawBoard(id) {
+function drawBoard(id) {    //создаём доску
 var color='white';
 var str='';
     str='<table id="board">';
@@ -95,7 +109,7 @@ var str='';
     print(id,str);
 }
 
-function drawFigures() {
+function drawFigures() {    //расставляем фигуры в исходное положение
     var placeID='';
     for (var j=1; j<9; j++) {
         for (var i=1; i<9; i++) {
