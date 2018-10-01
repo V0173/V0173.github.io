@@ -1,6 +1,18 @@
 body {
   background-image: url(images/hexagon.jpg);
   font-family: monospace;
+  margin: 0px;
+  border: 1px solid red;
+}
+
+.page {
+  height: 100%;
+  width: 600px;
+  background: whitesmoke;
+}
+
+.footer {
+  height: 200px;
 }
 
 ul {
@@ -11,13 +23,6 @@ ul {
 
 li {
   margin-bottom: 3px;
-}
-
-div {
-  width: 120px;
-  display: table-cell;
-  text-align: left;
-  background: gold;
 }
 
 a {
@@ -43,6 +48,10 @@ a {
 }
 
 #running_string {
+  width: 120px;
+  display: table-cell;
+  text-align: left;
+  background: gold;
   margin: 20px;
   color: red;
 }
