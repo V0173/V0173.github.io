@@ -1,4 +1,5 @@
 body {
+  height: 100vh;
   background-color: gray;
   background-image: linear-gradient(to bottom,
             rgba(49, 154, 202, 0.61),
