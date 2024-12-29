@@ -10,5 +10,6 @@ body {
   text-align: center;
   display: inline-block;
   border: 1px dashed gold;
-  width: 100%;
+  width: 50%;
+  align-items: center;
 }
