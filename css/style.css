@@ -5,3 +5,9 @@ body {
             rgba(49, 154, 202, 0.61),
             rgba(49, 151, 36, 0.63));
 }
+.hello {
+font-size: 24px;
+  text-align: center;
+  display: inline-block;
+  border: 1px dashed gold;
+}
