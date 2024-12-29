@@ -1,4 +1,5 @@
 body {
+  align-items: center;
   height: 100vh;
   background-color: gray;
   background-image: linear-gradient(to bottom,
@@ -11,5 +12,4 @@ body {
   display: inline-block;
   border: 1px dashed gold;
   width: 50%;
-  align-items: center;
 }
